@@ -24,6 +24,12 @@ class _SettingsPageState extends State<SettingsPage> {
     Colors.purple,
   ];
 
+  static const modeColors = <Color>[
+    Colors.red,
+    Colors.green,
+    Colors.yellow,
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
@@ -82,6 +88,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                 ],
               ),
+
+              // const SizedBox(height: 40),
+              // Wrap(
+              //   children: [
+              //     Text(
+              //       'Use connection status as glow'
+              //     ),
+              //   ],
+              // ),
 
               const SizedBox(height: 40),
 

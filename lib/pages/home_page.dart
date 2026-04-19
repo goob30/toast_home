@@ -4,11 +4,43 @@ import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../themes/app_themes.dart';
 import 'settings_page.dart';
+import '../bt_handler.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'dart:async';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  
+  static const modeColors = <Color>[
+    Colors.red,
+    Colors.green,
+    Colors.yellow,
+  ];
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  StreamSubscription? _btConnectionSub;
+  bool isBtConnected = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final btService = BtService();
+    _btConnectionSub = btService.device?.connectionState.listen((state) {
+      setState(() {
+        isBtConnected = state == BluetoothConnectionState.connected;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _btConnectionSub?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +76,9 @@ class HomePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: themeProvider.colorSeed.withAlpha(80),
+                        color: isBtConnected 
+                          ? HomePage.modeColors[1].withAlpha(80)
+                          : HomePage.modeColors[0].withAlpha(80),
                         blurRadius: 15,
                         spreadRadius: 1,
                       ),
@@ -54,7 +88,7 @@ class HomePage extends StatelessWidget {
                     elevation: 0,
                     
 
-                    //shadowColor: themeProvider.colorSeed.withAlpha(50), // this is glow
+                    //shadowColor: themeProvider.colorSeed.withAlpha(50); // this is glow
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     color: themeProvider.lightened(Theme.of(context).scaffoldBackgroundColor, lightenAmount ),
                     child: Padding(
@@ -62,52 +96,30 @@ class HomePage extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            'Current Theme Settings',
+                            isBtConnected ? 'Connected' : 'Disconnected',
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
+                          const SizedBox(height: 5),
+                          Text(
+                            'Helmet',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
                           const SizedBox(height: 16),
-                          _SettingRow(
+                          _ValueRow(
                             label: 'App Theme',
                             value: themeProvider.appTheme.label,
                           ),
                           const SizedBox(height: 8),
-                          _SettingRow(
+                          _ValueRow(
                             label: 'Theme Mode',
                             value: themeProvider.themeMode.toString().split('.')[1],
                           ),
                           const SizedBox(height: 8),
-                          _SettingRow(
+                          _ValueRow(
                             label: 'Gradient Colors',
                             value: themeProvider.useGradientColors
                                 ? 'Enabled'
                                 : 'Disabled',
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text('Accent Color: '),
-                              const SizedBox(width: 8),
-                              Container(
-                                width: 32,
-                                height: 32,
-                                decoration: BoxDecoration(
-                                  boxShadow: [BoxShadow(
-                                    color: themeProvider.colorSeed.withAlpha(102), // im a bit slow in the head its not this one
-                                    blurRadius: 12,
-                                    spreadRadius: 2,
-                                  )],
-                                  color: themeProvider.colorSeed, 
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface,
-                                  ),
-                                ),
-                                
-                              ),
-                            ],
                           ),
                         ],
                       ),
@@ -123,30 +135,60 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _SettingRow extends StatelessWidget {
+class _NameRow extends StatefulWidget {
   final String label;
-  final String value;
+  final MainAxisAlignment alignment;
 
-  const _SettingRow({
+  const _NameRow({required this.label, required this.alignment});
+
+  @override
+  State<_NameRow> createState() => _NameRowState();
+}
+
+class _NameRowState extends State<_NameRow> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: widget.alignment,
+      children: [
+        Text(
+          widget.label,
+        ),
+      ],
+    );
+  }
+}
+
+class _ValueRow extends StatefulWidget {
+  final String label;
+  final String? value;
+
+  const _ValueRow({
     required this.label,
-    required this.value,
+    this.value,
   });
 
+  @override
+  State<_ValueRow> createState() => _ValueRowState();
+}
+
+class _ValueRowState extends State<_ValueRow> {
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          label,
+          widget.label,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
+        if (widget.value != null)
+          Text(
+            widget.value!,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
       ],
     );
   }

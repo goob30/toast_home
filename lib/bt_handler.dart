@@ -6,10 +6,11 @@ class BtService {
   static final BtService _instance = BtService._internal();
   factory BtService() => _instance;
   BtService._internal();
+  
 
-  BluetoothDevice? _device;
-  BluetoothCharacteristic? _txCharacteristic;
-  BluetoothCharacteristic? _rxCharacteristic;
+  BluetoothDevice? device;
+  BluetoothCharacteristic? txCharacteristic;
+  BluetoothCharacteristic? rxCharacteristic;
 
   StreamSubscription<List<int>>? _rxSubscription;
 
