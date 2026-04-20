@@ -33,6 +33,44 @@ class _DevicePageState extends State<DevicePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Helmet'), // Change to dynamic to get name from BT
+        
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          Icon(
+            Icons.person,
+            size: 100,
+          ),
+
+          Row( // Battery levels row
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 12,
+                    child: Text(
+                      "L",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        height: 1.0,
+                      ),
+                    ),
+                  ),
+                  RotatedBox(quarterTurns: 3, child: Icon(Icons.battery_full_rounded)),
+                ],
+                
+              ),
+              
+            ],
+            
+          ),
+        ],
+      ),
+    );
   }
 }

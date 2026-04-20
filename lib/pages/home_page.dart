@@ -7,6 +7,7 @@ import 'settings_page.dart';
 import '../bt_handler.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'dart:async';
+import 'device_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -71,57 +72,66 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: isBtConnected 
-                          ? HomePage.modeColors[1].withAlpha(80)
-                          : HomePage.modeColors[0].withAlpha(80),
-                        blurRadius: 15,
-                        spreadRadius: 1,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context, MaterialPageRoute(
+                        builder: (_) => const DevicePage(),
                       ),
-                    ],
-                  ),
-                  child: Card(
-                    elevation: 0,
-                    
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: isBtConnected 
+                            ? HomePage.modeColors[1].withAlpha(80)
+                            : HomePage.modeColors[0].withAlpha(80),
+                          blurRadius: 15,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: Card(
+                      elevation: 0,
+                      
 
-                    //shadowColor: themeProvider.colorSeed.withAlpha(50); // this is glow
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    color: themeProvider.lightened(Theme.of(context).scaffoldBackgroundColor, lightenAmount ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        children: [
-                          Text(
-                            isBtConnected ? 'Connected' : 'Disconnected',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            'Helmet',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          const SizedBox(height: 16),
-                          _ValueRow(
-                            label: 'App Theme',
-                            value: themeProvider.appTheme.label,
-                          ),
-                          const SizedBox(height: 8),
-                          _ValueRow(
-                            label: 'Theme Mode',
-                            value: themeProvider.themeMode.toString().split('.')[1],
-                          ),
-                          const SizedBox(height: 8),
-                          _ValueRow(
-                            label: 'Gradient Colors',
-                            value: themeProvider.useGradientColors
-                                ? 'Enabled'
-                                : 'Disabled',
-                          ),
-                        ],
+                      //shadowColor: themeProvider.colorSeed.withAlpha(50); // this is glow
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      color: themeProvider.lightened(Theme.of(context).scaffoldBackgroundColor, lightenAmount ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            Text(
+                              isBtConnected ? 'Connected' : 'Disconnected',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              'Helmet',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 16),
+                            _ValueRow(
+                              label: 'App Theme',
+                              value: themeProvider.appTheme.label,
+                            ),
+                            const SizedBox(height: 8),
+                            _ValueRow(
+                              label: 'Theme Mode',
+                              value: themeProvider.themeMode.toString().split('.')[1],
+                            ),
+                            const SizedBox(height: 8),
+                            _ValueRow(
+                              label: 'Gradient Colors',
+                              value: themeProvider.useGradientColors
+                                  ? 'Enabled'
+                                  : 'Disabled',
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
