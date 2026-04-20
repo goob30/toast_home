@@ -39,32 +39,68 @@ class _DevicePageState extends State<DevicePage> {
         
       ),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsetsDirectional.only(top: 0, start: 10, end: 10, bottom: 10),
         children: [
           Icon(
             Icons.person,
             size: 100,
           ),
-
+          const SizedBox(height: 0), // probably remove this later
           Row( // Battery levels row
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 12,
-                    child: Text(
-                      "L",
-                      style: const TextStyle(
-                        fontSize: 12,
-                        height: 1.0,
-                      ),
-                    ),
+              // L hand battery
+              CircleAvatar(
+                radius: 12,
+                child: Text(
+                  "L",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    height: 1.0,
                   ),
-                  RotatedBox(quarterTurns: 3, child: Icon(Icons.battery_full_rounded)),
-                ],
-                
+                ),
               ),
+              const SizedBox(width:7),
+              isBtConnected ?
+              RotatedBox(
+                quarterTurns: 1, child: Transform.scale(
+                  scale: 1.25, child: Icon(Icons.battery_full_rounded),
+                ),
+              ) : Icon(Icons.link_off_rounded, color: Colors.white.withAlpha(75)),
+              //
+              SizedBox(width: 40),
+              // Main battery
+              CircleAvatar(
+                radius: 12,
+                child: Icon(Icons.cruelty_free_rounded)
+              ),
+              const SizedBox(width:7),
+              isBtConnected ?
+              RotatedBox(
+                quarterTurns: 1, child: Transform.scale(
+                  scale: 1.25, child: Icon(Icons.battery_full_rounded),
+                ),
+              ) : Icon(Icons.link_off_rounded, color: Colors.white.withAlpha(75)),
+              //
+              SizedBox(width: 40,),
+              // R hand battery
+              CircleAvatar(
+                radius: 12,
+                child: Text(
+                  "R",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    height: 1.0,
+                  ),
+                ),
+              ),
+              const SizedBox(width:7),
+              isBtConnected ?
+              RotatedBox(
+                quarterTurns: 1, child: Transform.scale(
+                  scale: 1.25, child: Icon(Icons.battery_full_rounded),
+                ),
+              ) : Icon(Icons.link_off_rounded, color: Colors.white.withAlpha(75)),
               
             ],
             
