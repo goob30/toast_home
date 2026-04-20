@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../bt_handler.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'dart:async';
+import '../providers/theme_provider.dart';
+import '../themes/app_themes.dart';
 
 class DevicePage extends StatefulWidget {
   const DevicePage({super.key});
@@ -33,6 +35,8 @@ class _DevicePageState extends State<DevicePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    double lightenAmount = isDark ? 0.08 : -0.08;
     return Scaffold(
       appBar: AppBar(
         title: Text('Helmet'), // Change to dynamic to get name from BT
@@ -105,6 +109,49 @@ class _DevicePageState extends State<DevicePage> {
             ],
             
           ),
+          SizedBox(height: 20),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: ThemeProvider().lightened(Theme.of(context).scaffoldBackgroundColor, lightenAmount ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 3 buttons filling width
+                Row(
+                  children: [
+                    Expanded(child: ElevatedButton(
+                      onPressed: () {}, child: const Text('A'), style: ElevatedButton.styleFrom(
+                        backgroundColor: ))),
+                    const SizedBox(width: 16),
+                    Expanded(child: ElevatedButton(
+                      onPressed: () {}, child: const Text('B'))),
+                    const SizedBox(width: 16),
+                    Expanded(child: ElevatedButton(
+                      onPressed: () {}, child: const Text('C'))),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
+
+                // Toggle + text
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Enable setting'),
+                    Switch(
+                      value: true,
+                      onChanged: (_) {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )
+
         ],
       ),
     );
