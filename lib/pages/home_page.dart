@@ -1,4 +1,3 @@
-// lib/pages/home_page.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
@@ -9,7 +8,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'dart:async';
 import 'device_page.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   static const modeColors = <Color>[
@@ -17,31 +16,6 @@ class HomePage extends StatefulWidget {
     Colors.green,
     Colors.yellow,
   ];
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  StreamSubscription? _btConnectionSub;
-  bool isBtConnected = false;
-
-  @override
-  void initState() {
-    super.initState();
-    final btService = BtService();
-    _btConnectionSub = btService.device?.connectionState.listen((state) {
-      setState(() {
-        isBtConnected = state == BluetoothConnectionState.connected;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _btConnectionSub?.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +36,11 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, _) {
+      body: Consumer2<ThemeProvider, BtService>(
+        builder: (context, themeProvider, btService, _) {
           final custom =
               Theme.of(context).extension<CustomThemeColors>();
+          final isBtConnected = btService.isBtConnected;
 
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 10),
@@ -115,25 +90,36 @@ class _HomePageState extends State<HomePage> {
                             ),
                             const SizedBox(height: 16),
                             _ValueRow(
-                              label: 'App Theme',
+                              label: 'Expression',
                               value: themeProvider.appTheme.label,
                             ),
                             const SizedBox(height: 8),
                             _ValueRow(
-                              label: 'Theme Mode',
+                              label: 'Fan Mode',
                               value: themeProvider.themeMode.toString().split('.')[1],
                             ),
                             const SizedBox(height: 8),
                             _ValueRow(
-                              label: 'Gradient Colors',
+                              label: 'Audio Passthrough',
                               value: themeProvider.useGradientColors
                                   ? 'Enabled'
                                   : 'Disabled',
+                            ),
+                            const SizedBox(height:8),
+                            Row(
+                              children: [
+                                const Text('Debug Bluetooth Disc/Con'),
+                                Switch(
+                                  value: isBtConnected,
+                                  onChanged: (val) {btService.updateConnectionStatus(val);},
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
                     ),
+                    
                   ),
                 ),
               ],

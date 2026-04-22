@@ -1,6 +1,6 @@
-// lib/pages/settings_page.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:teach_assist/pages/safetyinfo_page.dart';
 import '../providers/theme_provider.dart';
 import '../themes/app_themes.dart';
 
@@ -101,14 +101,31 @@ class _SettingsPageState extends State<SettingsPage> {
               const SizedBox(height: 40),
 
               // -------- Help text --------
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Text(
-                  'Themes are saved automatically and will persist '
-                  'when you close and reopen the app.',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 4),
+              //   child: Text(
+              //     'Themes are saved automatically and will persist '
+              //     'when you close and reopen the app.',
+              //     style: Theme.of(context).textTheme.bodySmall,
+              // //   ),
+              // // ),
+              // const SizedBox(height:10),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 4),
+              //   child: Text(
+              //     'Do not rely solely on this app or sensor data as safety measures. Sensor information may drift or be delayed.\n'
+              //     'If the readings indicate unsafe conditions, or if you feel unwell (lightheaded, dizzy, tired), take off the helmet immediately and air it out for a few minutes.',
+              //     style: Theme.of(context).textTheme.bodySmall,
+              //   ),
+              // ),
+              ElevatedButton(onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SafetyinfoPage(),
+                  ),
+                );
+              }, child: Text('Safety Info')),
             ],
           ),
         );

@@ -4,17 +4,22 @@ import 'package:provider/provider.dart';
 import 'providers/theme_provider.dart';
 import 'themes/app_themes.dart';
 import 'pages/home_page.dart';
+import 'bt_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize theme provider with saved preferences
   final themeProvider = ThemeProvider();
   await themeProvider.initialize();
+  
+  final btService = BtService(); // Add this
 
   runApp(
-    ChangeNotifierProvider<ThemeProvider>(
-      create: (_) => themeProvider,
+    MultiProvider( // Change to MultiProvider
+      providers: [
+        ChangeNotifierProvider<ThemeProvider>(create: (_) => themeProvider),
+        ChangeNotifierProvider<BtService>(create: (_) => btService), // Add this
+      ],
       child: const MyApp(),
     ),
   );
