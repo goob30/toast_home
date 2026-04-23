@@ -8,9 +8,10 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'dart:async';
 import 'device_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
+  @override
+  State<HomePage> createState() => _HomePageState();
   static const modeColors = <Color>[
     Colors.red,
     Colors.green,
@@ -23,7 +24,9 @@ class HomePage extends StatelessWidget {
     "Medium",
     "High"
   ];
+}
 
+class _HomePageState extends State<HomePage>{
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
