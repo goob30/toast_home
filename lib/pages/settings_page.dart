@@ -23,14 +23,14 @@ class _SettingsPageState extends State<SettingsPage> {
     Colors.pink,
     Colors.purple,
   ];
-
+  // ---------------color
   static const modeColors = <Color>[
     Colors.red,
     Colors.green,
     Colors.yellow,
   ];
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, _) {

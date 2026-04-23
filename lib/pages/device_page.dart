@@ -5,6 +5,7 @@ import 'dart:async';
 import '../providers/theme_provider.dart';
 import '../themes/app_themes.dart';
 import 'package:provider/provider.dart';
+import 'settings_page.dart';
 
 class DevicePage extends StatefulWidget {
   const DevicePage({super.key});
@@ -23,6 +24,17 @@ class _DevicePageState extends State<DevicePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Helmet'), // Change to dynamic to get name from BT
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const SettingsPage(),
+              ),
+            ),
+          ),
+        ],
         
       ),
       body: Consumer2<ThemeProvider, BtService>(
@@ -58,7 +70,7 @@ class _DevicePageState extends State<DevicePage> {
                     quarterTurns: 1, child: Transform.scale(
                       scale: 1.25, child: Icon(Icons.battery_full_rounded),
                     ),
-                  ) : Icon(Icons.link_off_rounded, color: Colors.white.withAlpha(75)),
+                  ) : Icon(Icons.link_off_rounded, color: Colors.grey),
                   //
                   SizedBox(width: 40),
                   // Main battery
@@ -72,7 +84,7 @@ class _DevicePageState extends State<DevicePage> {
                     quarterTurns: 1, child: Transform.scale(
                       scale: 1.25, child: Icon(Icons.battery_full_rounded),
                     ),
-                  ) : Icon(Icons.link_off_rounded, color: Colors.white.withAlpha(75)),
+                  ) : Icon(Icons.link_off_rounded, color: Colors.grey),
                   //
                   SizedBox(width: 40,),
                   // R hand battery
@@ -92,7 +104,7 @@ class _DevicePageState extends State<DevicePage> {
                     quarterTurns: 1, child: Transform.scale(
                       scale: 1.25, child: Icon(Icons.battery_full_rounded),
                     ),
-                  ) : Icon(Icons.link_off_rounded, color: Colors.white.withAlpha(75)),
+                  ) : Icon(Icons.link_off_rounded, color: Colors.grey),
                   
                 ],
                 

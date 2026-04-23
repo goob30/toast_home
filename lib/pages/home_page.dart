@@ -17,6 +17,13 @@ class HomePage extends StatelessWidget {
     Colors.yellow,
   ];
 
+  static const fanModes = <String> [
+    "Auto",
+    "Low",
+    "Medium",
+    "High"
+  ];
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -25,14 +32,28 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Home'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const SettingsPage(),
-              ),
-            ),
+          Consumer<BtService>(
+            builder: (context, btService, _) {
+              return Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: btService.isScanning
+                        ? () => btService.stopScan()
+                        : () => btService.scanAndConnectHM10(),
+                    child: Text(btService.isScanning ? "Stop" : "Scan"),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.settings),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const SettingsPage(),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
