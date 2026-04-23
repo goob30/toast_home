@@ -74,6 +74,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 12),
+              Row(children: [
+                Text('Device ID'),
+                Expanded(child: TextField(),),
+              ],),
+              const SizedBox(height: 12),
               Wrap(
                 spacing: 16,
                 runSpacing: 12,

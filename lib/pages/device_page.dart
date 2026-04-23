@@ -6,6 +6,7 @@ import '../providers/theme_provider.dart';
 import '../themes/app_themes.dart';
 import 'package:provider/provider.dart';
 import 'settings_page.dart';
+import 'devicesettings_page.dart';
 
 class DevicePage extends StatefulWidget {
   const DevicePage({super.key});
@@ -30,7 +31,7 @@ class _DevicePageState extends State<DevicePage> {
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => const SettingsPage(),
+                builder: (_) => const DevicesettingsPage(),
               ),
             ),
           ),
