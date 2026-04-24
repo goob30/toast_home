@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:teach_assist/pages/safetyinfo_page.dart';
 import '../providers/theme_provider.dart';
 import '../themes/app_themes.dart';
+import 'package:flutter/services.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -44,40 +45,36 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               
 
-              // -------- App Theme Preset --------
-              ListTile(
-                title: const Text('App Theme Preset'),
-                subtitle: const Text('Choose a theme style'),
-                trailing: DropdownButton<AppTheme>(
-                  value: themeProvider.appTheme,
-                  items: AppTheme.values
-                      .map(
-                        (theme) => DropdownMenuItem(
-                          value: theme,
-                          child: Text(theme.label),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (theme) {
-                    if (theme != null) {
-                      themeProvider.setAppTheme(theme);
-                    }
-                  },
-                ),
+              Row(
+                children: [
+                  Text('App Theme'),
+                  Spacer(),
+                  DropdownButton<AppTheme>(
+                    value: themeProvider.appTheme,
+                    items: AppTheme.values
+                        .map(
+                          (theme) => DropdownMenuItem(
+                            value: theme,
+                            child: Text(theme.label),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (theme) {
+                      if (theme != null) {
+                        themeProvider.setAppTheme(theme);
+                      }
+                    },
+                  ),
+                ],
               ),
 
-              const Divider(height: 40),
 
               // -------- Accent Color Selector --------
               Text(
                 'Accent Color',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              const SizedBox(height: 12),
-              Row(children: [
-                Text('Device ID'),
-                Expanded(child: TextField(),),
-              ],),
+              
               const SizedBox(height: 12),
               Wrap(
                 spacing: 16,
@@ -94,35 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
 
-              // const SizedBox(height: 40),
-              // Wrap(
-              //   children: [
-              //     Text(
-              //       'Use connection status as glow'
-              //     ),
-              //   ],
-              // ),
-
               const SizedBox(height: 40),
-
-              // -------- Help text --------
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 4),
-              //   child: Text(
-              //     'Themes are saved automatically and will persist '
-              //     'when you close and reopen the app.',
-              //     style: Theme.of(context).textTheme.bodySmall,
-              // //   ),
-              // // ),
-              // const SizedBox(height:10),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 4),
-              //   child: Text(
-              //     'Do not rely solely on this app or sensor data as safety measures. Sensor information may drift or be delayed.\n'
-              //     'If the readings indicate unsafe conditions, or if you feel unwell (lightheaded, dizzy, tired), take off the helmet immediately and air it out for a few minutes.',
-              //     style: Theme.of(context).textTheme.bodySmall,
-              //   ),
-              // ),
               ElevatedButton(onPressed: () {
                 Navigator.push(
                   context,
@@ -131,6 +100,25 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 );
               }, child: Text('Safety Info')),
+              
+              const Divider(height: 40),
+
+              Row(
+                children: [
+                  Text('Device ID'),
+                  Spacer(),
+                  SizedBox(
+                    width: 100,
+                    child: TextField(
+                      textAlign: TextAlign.right,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         );

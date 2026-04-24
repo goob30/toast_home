@@ -1,3 +1,5 @@
+
+// claude more like bald
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -17,8 +19,14 @@ class BtService extends ChangeNotifier {
   StreamSubscription<List<int>>? _rxSubscription;
   StreamSubscription<BluetoothConnectionState>? _connectionSubscription;
   
+  bool _isAuthenticated = false;
+  bool get isAuthenticated => _isAuthenticated;
+
   final StreamController<List<int>> _dataStreamController = StreamController.broadcast();
   Stream<List<int>> get dataStream => _dataStreamController.stream;
+
+  final StreamController<bool> _authStreamController = StreamController.broadcast();
+  Stream<bool> get authStream => _authStreamController.stream;
 
   static const String serviceUUID = "0000FFE0-0000-1000-8000-00805F9B34FB";
   static const String characteristicUUID = "0000FFE1-0000-1000-8000-00805F9B34FB";
@@ -27,6 +35,33 @@ class BtService extends ChangeNotifier {
 
   bool _isScanning = false;
   bool get isScanning => _isScanning;
+
+  Future<void> sendAuthCode(int pin) async {
+    if (txCharacteristic == null || !_isBtConnected) {
+      debugPrint('Not connected');
+      _authStreamController.add(false);
+      return;
+    }
+    
+    try {
+      // Pack the 6-digit PIN into bytes
+      // Format: [255, byte1, byte2, byte3, byte4] where 255 indicates auth packet
+      final byte1 = (pin >> 24) & 0xFF;
+      final byte2 = (pin >> 16) & 0xFF;
+      final byte3 = (pin >> 8) & 0xFF;
+      final byte4 = pin & 0xFF;
+      
+      final authPacket = [255, byte1, byte2, byte3, byte4];
+      
+      await txCharacteristic!.write(authPacket, withoutResponse: false);
+      debugPrint('Sent auth code: $pin');
+      
+      // Wait for response in _handleIncomingData
+    } catch (e) {
+      debugPrint('Auth send error: $e');
+      _authStreamController.add(false);
+    }
+  }
 
   void updateConnectionStatus(bool connected) {
     _isBtConnected = connected;
@@ -75,6 +110,7 @@ class BtService extends ChangeNotifier {
       await _rxSubscription?.cancel();
       await _connectionSubscription?.cancel();
       await device?.disconnect();
+      _isAuthenticated = false;
       updateConnectionStatus(false);
     } catch (e) {
       debugPrint('Disconnect error: $e');
@@ -86,8 +122,16 @@ class BtService extends ChangeNotifier {
       final target = data[0];
       final value = data[1];
       
-      debugPrint('Received - Target: $target, Value: $value');
+      // Check for auth response
+      if (target == 255) {
+        _isAuthenticated = (value == 1);
+        debugPrint('Auth response: ${_isAuthenticated ? "SUCCESS" : "FAILED"}');
+        _authStreamController.add(_isAuthenticated);
+        notifyListeners();
+        return;
+      }
       
+      debugPrint('Received - Target: $target, Value: $value');
       _dataStreamController.add(data);
       notifyListeners();
     }
@@ -178,6 +222,7 @@ class BtService extends ChangeNotifier {
     _rxSubscription?.cancel();
     _connectionSubscription?.cancel();
     _dataStreamController.close();
+    _authStreamController.close();
     super.dispose();
   }
 }
